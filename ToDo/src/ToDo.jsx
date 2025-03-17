@@ -21,7 +21,8 @@ export default function ToDo() {
     }
 
     const handleRemoveTask = (index) => {
-
+        const updatedTasks = tasks.filter((_, i) => i !== index)
+        setTasks(updatedTasks)
     }
 
     // My try at writing the code: 
@@ -48,12 +49,10 @@ export default function ToDo() {
     const handleEditTask = (index) => {
         if (taskTitle.trim() !== "") {
             const updatedTasks = tasks.map((task, i) => {
-                return i === index
-                    ? { title: taskTitle, detail: taskDetail, date: taskDate }
-                    : task;
+                return i === index ? { title: taskTitle, detail: taskDetail, date: taskDate } : task;
             });
 
-            setUpdatedTasks(updatedTasks); // Replace the tasks correctly
+            setTasks(updatedTasks); // Replace the tasks correctly
 
             // Reset input fields
             setTaskTitle("");
@@ -86,10 +85,17 @@ export default function ToDo() {
             <section>
                 <div className="ongoing-tasks">
                     <ol>
-
+                        {tasks.map((task, index) =>
+                            <li key={index}>
+                                <span><strong>{task.title}</strong> - {task.date}</span>
+                                <p>- {task.detail}</p>
+                                <button onClick={() => handleRemoveTask(index)}>✅</button>
+                                <button onClick={() => handleEditTask(index)}>Edit</button>
+                            </li>
+                        )}
                     </ol>
                 </div>
-                <div className="completed-tasks">
+                {/* <div className="completed-tasks">
                     <ol>
 
                     </ol>
@@ -98,7 +104,7 @@ export default function ToDo() {
                     <ol>
 
                     </ol>
-                </div>
+                </div> */}
             </section>
         </div>
     )
