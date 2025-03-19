@@ -19,6 +19,8 @@ export default function ToDo() {
             setTaskTitle("")
             setTaskDetail("")
             setTaskDate(new Date().toISOString().split("T")[0])
+        } else {
+            alert("Please enter a valid task title")
         }
     }
 
@@ -45,11 +47,16 @@ export default function ToDo() {
 
         const updatedTasksArray = tasks.map((task, index) => (index === currentTaskIndex ? updatedTask : task));
 
-        setTasks(updatedTasksArray)
-        setIsEditing(false)
-        setTaskTitle("");
-        setTaskDetail("");
-        setTaskDate(new Date().toISOString().split("T")[0]);
+        if (taskTitle.trim() !== "") {
+            setTasks(updatedTasksArray)
+            setIsEditing(false)
+            setTaskTitle("");
+            setTaskDetail("");
+            setTaskDate(new Date().toISOString().split("T")[0]);
+        } else {
+            alert("Please enter a valid task title!")
+        }
+
     }
 
     const handleAddTaskTitle = (e) => {
