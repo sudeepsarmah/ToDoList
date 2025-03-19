@@ -1,4 +1,4 @@
-import React, { useState, } from "react"
+import React, { useState } from "react"
 
 export default function ToDo() {
 
@@ -6,7 +6,7 @@ export default function ToDo() {
     const [taskTitle, setTaskTitle] = useState("")
     const [taskDetail, setTaskDetail] = useState("")
     const [taskDate, setTaskDate] = useState(new Date().toISOString().split("T")[0])
-    const [currentTask, setCurrentTask] = useState(null)
+    const [currentTaskIndex, setCurrentTaskIndex] = useState(null)
     const [isEditing, setIsEditing] = useState(false)
 
 
@@ -27,38 +27,30 @@ export default function ToDo() {
         setTasks(updatedTasks)
     }
 
-    // My try at writing the code: 
-    // const handleEditTask = (e, index) => {
-    // // when the user clicks on the edit button, the task should open in the initial style where the user can edit and then save it again
-    // setTaskTitle(e.target.value)
-    // setTaskDetail(e.target.value)
-    // setTaskDate(e.target.value)
-
-
-    // if (taskTitle.trim() !== "") {
-    //     const updatedTasks = tasks.map((task, index) => {
-    //         return index === index ? { title: taskTitle, detail: taskDetail, date: taskDate } : task
-    //     }
-    //     )
-    //     setUpdatedTasks(t => [...t, updatedTasks])
-
-    //     setTaskTitle("")
-    //     setTaskDetail("")
-    //     setTaskDate(new Date().toISOString().split("T")[0].split("-").reverse().join("-"))
-    // }
-    // }
-
     const handleEditTask = (index) => {
 
         const taskToEdit = tasks[index]
-        setCurrentTask(taskToEdit)
+        setCurrentTaskIndex(index)
         setIsEditing(true)
 
-        setTaskTitle(taskToEdit.taskTitle)
-        setTaskDetail(taskToEdit.taskDetail)
-        setTaskDate(taskToEdit.taskDate)
+        setTaskTitle(taskToEdit.title)
+        setTaskDetail(taskToEdit.detail)
+        setTaskDate(taskToEdit.date)
 
     };
+
+    const handleUpdateTask = () => {
+
+        const updatedTask = { title: taskTitle, detail: taskDetail, date: taskDate }
+
+        const updatedTasksArray = tasks.map((task, index) => (index === currentTaskIndex ? updatedTask : task));
+
+        setTasks(updatedTasksArray)
+        setIsEditing(false)
+        setTaskTitle("");
+        setTaskDetail("");
+        setTaskDate(new Date().toISOString().split("T")[0]);
+    }
 
     const handleAddTaskTitle = (e) => {
         setTaskTitle(e.target.value)
@@ -78,10 +70,10 @@ export default function ToDo() {
             <div className="user-input">
                 {/* value is set according to if it's in editing mode or adding new task mode */}
                 {/* optional chaining to prevent causing errors and to show an empty string in case there's no value to show */}
-                <input type="text" value={isEditing ? currentTask?.taskTitle || "" : taskTitle} onChange={handleAddTaskTitle} placeholder="Task Title..." />
-                <input type="text" value={isEditing ? currentTask?.taskDetail || "" : taskDetail} onChange={handleAddTaskDetail} placeholder="Task Details.." />
-                <input type="date" value={isEditing ? currentTask?.taskDate || "" : taskDate} onChange={handleAddTaskDate} />
-                <button className="add-task-btn" onClick={isEditing ? handleEditTask : handleAddTask}>{isEditing ? "Edit Task" : "Add Task"}</button>
+                <input type="text" value={taskTitle} onChange={handleAddTaskTitle} placeholder="Task Title..." />
+                <input type="text" value={taskDetail} onChange={handleAddTaskDetail} placeholder="Task Details.." />
+                <input type="date" value={taskDate} onChange={handleAddTaskDate} />
+                <button className="add-task-btn" onClick={isEditing ? handleUpdateTask : handleAddTask}>{isEditing ? "Edit Task" : "Add Task"}</button>
             </div>
             <section>
                 <div className="ongoing-tasks">
