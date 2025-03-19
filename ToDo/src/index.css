@@ -1,0 +1,49 @@
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #0f0e17;
+    box-sizing: border-box;
+}
+
+.todo{
+    text-align: center;
+    font-family: Helvetica, sans-serif;
+    background-color: #fffffe;
+    padding: 36px 12px;
+    border-radius: 28px;
+    box-shadow: 3.2px 4px 4px #a7a9be;
+}
+
+.user-input{
+    display: flex;
+    flex-direction: column;
+}
+
+.user-input input{
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.btn-div{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.btn{
+    font-size: 24px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.done-btn{
+    padding: 0 32px;
+    color: #0f0e17;
+    
+}
+
+.edit-btn{
+}

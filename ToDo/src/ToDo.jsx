@@ -5,8 +5,10 @@ export default function ToDo() {
     const [tasks, setTasks] = useState([])
     const [taskTitle, setTaskTitle] = useState("")
     const [taskDetail, setTaskDetail] = useState("")
-    const [taskDate, setTaskDate] = useState(new Date().toISOString().split("T")[0].split("-").reverse().join("-"))
-    const [updatedTasks, setUpdatedTasks] = useState()
+    const [taskDate, setTaskDate] = useState(new Date().toISOString().split("T")[0])
+    const [currentTask, setCurrentTask] = useState(null)
+    const [isEditing, setIsEditing] = useState(false)
+
 
     const handleAddTask = () => {
         const newTask = { title: taskTitle, detail: taskDetail, date: taskDate }
@@ -16,7 +18,7 @@ export default function ToDo() {
 
             setTaskTitle("")
             setTaskDetail("")
-            setTaskDate(new Date().toISOString().split("T")[0].split("-").reverse().join("-"))
+            setTaskDate(new Date().toISOString().split("T")[0])
         }
     }
 
@@ -47,18 +49,15 @@ export default function ToDo() {
     // }
 
     const handleEditTask = (index) => {
-        if (taskTitle.trim() !== "") {
-            const updatedTasks = tasks.map((task, i) => {
-                return i === index ? { title: taskTitle, detail: taskDetail, date: taskDate } : task;
-            });
 
-            setTasks(updatedTasks); // Replace the tasks correctly
+        const taskToEdit = tasks[index]
+        setCurrentTask(taskToEdit)
+        setIsEditing(true)
 
-            // Reset input fields
-            setTaskTitle("");
-            setTaskDetail("");
-            setTaskDate(new Date().toLocaleDateString('en-GB').split('/').reverse().join('-'));
-        }
+        setTaskTitle(taskToEdit.taskTitle)
+        setTaskDetail(taskToEdit.taskDetail)
+        setTaskDate(taskToEdit.taskDate)
+
     };
 
     const handleAddTaskTitle = (e) => {
@@ -77,10 +76,12 @@ export default function ToDo() {
         <div className="todo">
             <h2>List of Task</h2>
             <div className="user-input">
-                <input type="text" value={taskTitle} onChange={handleAddTaskTitle} placeholder="Task Title..." />
-                <input type="text" value={taskDetail} onChange={handleAddTaskDetail} placeholder="Task Details.." />
-                <input type="date" value={taskDate} onChange={handleAddTaskDate} />
-                <button className="add-task-btn" onClick={handleAddTask}>Add Task</button>
+                {/* value is set according to if it's in editing mode or adding new task mode */}
+                {/* optional chaining to prevent causing errors and to show an empty string in case there's no value to show */}
+                <input type="text" value={isEditing ? currentTask?.taskTitle || "" : taskTitle} onChange={handleAddTaskTitle} placeholder="Task Title..." />
+                <input type="text" value={isEditing ? currentTask?.taskDetail || "" : taskDetail} onChange={handleAddTaskDetail} placeholder="Task Details.." />
+                <input type="date" value={isEditing ? currentTask?.taskDate || "" : taskDate} onChange={handleAddTaskDate} />
+                <button className="add-task-btn" onClick={isEditing ? handleEditTask : handleAddTask}>{isEditing ? "Edit Task" : "Add Task"}</button>
             </div>
             <section>
                 <div className="ongoing-tasks">
@@ -88,23 +89,15 @@ export default function ToDo() {
                         {tasks.map((task, index) =>
                             <li key={index}>
                                 <span><strong>{task.title}</strong> - {task.date}</span>
-                                <p>- {task.detail}</p>
-                                <button onClick={() => handleRemoveTask(index)}>✅</button>
-                                <button onClick={() => handleEditTask(index)}>Edit</button>
+                                <p>{task.detail}</p>
+                                <div className="btn-div">
+                                    <button onClick={() => handleRemoveTask(index)} className="done-btn btn">✅</button>
+                                    <button onClick={() => handleEditTask(index)} className="edit-btn btn">Edit</button>
+                                </div>
                             </li>
                         )}
                     </ol>
                 </div>
-                {/* <div className="completed-tasks">
-                    <ol>
-
-                    </ol>
-                </div>
-                <div className="deleted-tasks">
-                    <ol>
-
-                    </ol>
-                </div> */}
             </section>
         </div>
     )
