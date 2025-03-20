@@ -73,7 +73,7 @@ export default function ToDo() {
 
     return (
         <div className="todo">
-            <h2>List of Task</h2>
+            <h2>List of Tasks</h2>
             <div className="user-input">
                 {/* value is set according to if it's in editing mode or adding new task mode */}
                 {/* optional chaining to prevent causing errors and to show an empty string in case there's no value to show */}
@@ -82,20 +82,23 @@ export default function ToDo() {
                 <input type="date" value={taskDate} onChange={handleAddTaskDate} />
                 <button className="add-task-btn" onClick={isEditing ? handleUpdateTask : handleAddTask}>{isEditing ? "Edit Task" : "Add Task"}</button>
             </div>
-            <section>
+            <section className="tasks-list">
                 <div className="ongoing-tasks">
-                    <ol>
+                    <ul>
                         {tasks.map((task, index) =>
                             <li key={index}>
-                                <span><strong>{task.title}</strong> - {task.date}</span>
+                                <div className="task-heading">
+                                    <span><strong>{task.title}</strong></span>
+                                    <span>{task.date}</span>
+                                </div>
                                 <p>{task.detail}</p>
                                 <div className="btn-div">
-                                    <button onClick={() => handleRemoveTask(index)} className="done-btn btn">✅</button>
+                                    <button onClick={() => handleRemoveTask(index)} className="done-btn btn">Completed</button>
                                     <button onClick={() => handleEditTask(index)} className="edit-btn btn">Edit</button>
                                 </div>
                             </li>
                         )}
-                    </ol>
+                    </ul>
                 </div>
             </section>
         </div>
