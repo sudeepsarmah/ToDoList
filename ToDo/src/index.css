@@ -37,7 +37,7 @@ body{
     display: flex;
     flex-direction: column;
     row-gap: 12px;
-    min-width: 320px;
+    min-width: 300px;
 }
 
 .user-input input{
